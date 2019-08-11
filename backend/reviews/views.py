@@ -2,6 +2,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import filters, status
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .models import Review
 from .serializers import ReviewSerializer
 from .permissions import ReviewAuthorOrReanOnly
@@ -11,10 +13,10 @@ class ReviewsListView(ListCreateAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly, )
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    filter_backends = [filters.SearchFilter, ]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend, ]
     search_fields = ['author__username', 'blogger',
                      'author__last_name', 'author__first_name', ]
-
+    filterset_fields = ['evaluation', ]
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 

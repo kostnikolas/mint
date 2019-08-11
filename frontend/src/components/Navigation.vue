@@ -13,22 +13,18 @@
             <b-nav-item to="/">
               <font-awesome-icon icon="th-list" /> Отзывы
             </b-nav-item>
-            <b-nav-item href='#' @click="activateNewReviewMode">
+            <b-nav-item
+            to='/'
+            @click="activateNewReviewMode"
+            :disabled="!isAuth"
+            :title="isAuth ? 'Добавить' : 'Требуется вход в систему'"
+            >
               <font-awesome-icon icon="plus" /> Добавить отзыв
             </b-nav-item>
           </b-navbar-nav>
-
           <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown right>
-              <!-- Using 'button-content' slot -->
-              <template slot="button-content">
-                <em>User</em>
-              </template>
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
+            <UserInfoMenu v-if="isAuth"/>
+            <UserLogRegMenu v-else />
         </b-collapse>
       </b-container>
     </b-navbar>
@@ -36,15 +32,23 @@
 </template>
 
 <script>
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faLeaf, faThList, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { mapActions } from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faLeaf, faThList, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { mapActions, mapGetters } from 'vuex';
+import UserInfoMenu from './UserInfoMenu.vue';
+import UserLogRegMenu from './UserLogRegMenu.vue';
 
 library.add(faLeaf, faThList, faPlus);
 
 export default {
-  methods:{
-    ...mapActions(['activateNewReviewMode'])
-  }
+  components: {
+    UserInfoMenu, UserLogRegMenu,
+  },
+  methods: {
+    ...mapActions(['activateNewReviewMode']),
+  },
+  computed: {
+    ...mapGetters(['isAuth']),
+  },
 };
 </script>

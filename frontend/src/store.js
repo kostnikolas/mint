@@ -11,10 +11,20 @@ const store = new Vuex.Store(
       searchText: '',
       currentReview: null,
       newReviewMode: false,
+      user: null,
+      filter: '',
+    },
+    getters: {
+      isAuth(state) {
+        return state.user !== null;
+      },
     },
     mutations: {
       setSearchText(state, text) {
         state.searchText = text;
+      },
+      setFilter(state, filter) {
+        state.filter = filter;
       },
       setReviewItems(state, items) {
         Vue.set(state, 'reviews', items);
@@ -25,14 +35,18 @@ const store = new Vuex.Store(
       setNewReviewMode(state, status) {
         state.newReviewMode = status;
       },
+      setUserInfo(state, userInfo) {
+        Vue.set(state, 'user', userInfo);
+      },
     },
     actions: {
       reviewItemsRequest: async (context) => {
-        const items = await api.getReviewItems(context.state.searchText);
+        const items = await api.getReviewItems(context.state.searchText, context.state.filter);
         context.commit('setReviewItems', items);
       },
-      searchReviewItems: async (context, text) => {
+      searchReviewItems: async (context, { text, filter }) => {
         context.commit('setSearchText', text);
+        context.commit('setFilter', filter);
         context.dispatch('reviewItemsRequest');
       },
       activateNewReviewMode: ({ commit }) => {
@@ -56,6 +70,31 @@ const store = new Vuex.Store(
         const result = await api.createReview(blogger, evaluation);
         if (result.success) {
           context.dispatch('reviewItemsRequest');
+        }
+        return result;
+      },
+      getUserInfoRequest: async ({ commit }) => {
+        const result = await api.getUserInfo();
+        commit('setUserInfo', result);
+      },
+      tryUserLogin: async (context, { username, password }) => {
+        const result = await api.loginUser(username, password);
+        if (result.success) {
+          context.dispatch('getUserInfoRequest');
+        }
+        return result;
+      },
+      userLogout: async ({ dispatch }) => {
+        await api.logoutUser();
+        dispatch('getUserInfoRequest');
+      },
+      userSignup: async ({ dispatch }, {
+        username, email, password, firstName, lastName,
+      }) => {
+        const result = await api.signupUser(username, email, password, firstName, lastName);
+        if (result.success) {
+          await dispatch('tryUserLogin', { username, password });
+          dispatch('getUserInfoRequest');
         }
         return result;
       },

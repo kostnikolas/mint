@@ -14,12 +14,21 @@ export default new Router({
       component: Review,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      path: '/account',
+      name: 'account',
+      component: () => import('./views/Account.vue'),
+      children: [
+        {
+          path: '',
+          name: 'login',
+          component: () => import('./components/LoginForm.vue'),
+        },
+        {
+          path: '/signup',
+          name: 'signup',
+          component: () => import('./components/RegisterForm.vue'),
+        },
+      ],
     },
   ],
 });

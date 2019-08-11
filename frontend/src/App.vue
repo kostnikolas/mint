@@ -14,18 +14,19 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Navigation from './components/Navigation.vue';
-import {mapActions} from 'vuex';
+
 export default {
   components: {
     Navigation,
   },
-  methods:{
-    ...mapActions(['reviewItemsRequest'])
+  methods: {
+    ...mapActions(['reviewItemsRequest', 'getUserInfoRequest']),
   },
-  mounted(){
-    console.log('mounted')
+  mounted() {
     this.reviewItemsRequest();
+    this.getUserInfoRequest();
   },
 };
 </script>
