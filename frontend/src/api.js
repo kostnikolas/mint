@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-const REVIEW_ITEMS_URL = 'http://localhost:8000/reviews/';
+const REVIEW_ITEMS_URL = '/api/reviews/';
 
 
-const LOGOUT_URL = 'http://localhost:8000/api-auth/logout/';
+const LOGOUT_URL = '/api/api-auth/logout/';
 
-const USER_INFO_URL = 'http://localhost:8000/accounts/';
+const USER_INFO_URL = '/api/accounts/';
 
-const USER_SIGNUP_URL = 'http://localhost:8000/accounts/signup/';
-const USER_SIGNIN_URL = 'http://localhost:8000/accounts/signin/';
+const USER_SIGNUP_URL = '/api/accounts/signup/';
+const USER_SIGNIN_URL = '/api/accounts/signin/';
 
 const apiService = axios.create({
   withCredentials: true,
