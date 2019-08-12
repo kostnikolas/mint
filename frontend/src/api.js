@@ -19,10 +19,11 @@ const apiService = axios.create({
 /**
  * Getting reviews items
  * @param {string} searchText the text to search
+ * @param {string} filter the text to filter evaluation
  */
 export async function getReviewItems(searchText, filter) {
   let url = searchText === '' ? REVIEW_ITEMS_URL : `${REVIEW_ITEMS_URL}?search=${searchText}`;
-  url = filter === '' ? url : `${url}&evaluation=${filter}`;
+  url = filter === '' ? url : `${url}${searchText === '' ? '?' : '&'}evaluation=${filter}`;
   const response = await apiService.get(url);
   return response.data;
 }
